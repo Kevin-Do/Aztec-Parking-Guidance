@@ -1,0 +1,26 @@
+
+##Starting Steps
+[Python (miniconda edition)](http://conda.pydata.org/docs/install/quick.html/)
+Select your OS and install miniconda and make sure to check the box asking to delegate minicoda as this PC's python 3.4.
+
+Open `cmd(admistrator mode)` or `terminal(sudo)` and run:
+
+`conda install -c menpo opencv3`
+
+![installing](http://i.imgur.com/KenIA5b.png)
+
+Afterwards check to see if everything's installed:
+
+>`python`
+>>`>>import cv2`
+>>`>>import numpy`
+>>`>>import matplotlib`
+
+Make sure these commands run without any errors. If not, exit python interpretor and run what's missing:
+
+	pip install matplotlib 
+
+
+
+
+
