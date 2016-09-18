@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+img = cv2.imread("go-car-15.jpg",0 )
 # greyscale filter OR cv2.0
 
 # IMREAD_COLOR
