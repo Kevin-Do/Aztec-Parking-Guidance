@@ -1,5 +1,5 @@
 
-##Starting Steps
+#Starting Steps
 [Python (miniconda edition)](http://conda.pydata.org/docs/install/quick.html/)
 Select your OS and install miniconda and make sure to check the box asking to delegate minicoda as this PC's python 3.4.
 
@@ -20,7 +20,10 @@ Make sure these commands run without any errors. If not, exit python interpretor
 
 	pip install matplotlib 
 
+### IDE
 
+Personally, I'm using the PyCharm Community Edition, feel free to use whatever you'd like.
+[PyCharm Download](https://www.jetbrains.com/pycharm/download/#section=windows/)
 
 
 
