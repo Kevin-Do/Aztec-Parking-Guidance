@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('parking 2.mp4')
 #first webcam
 
 while(True):
@@ -10,7 +10,7 @@ while(True):
        cv2.imshow('nameFrame',frame)
        cv2.imshow('grey', grey)
 
-       if cv2.waitKey(0) & 0xFF == ord('q'):
+       if cv2.waitKey(50) & 0xFF == ord('q'):
            break
 cap.release()
 cv2.destroyAllWindows
