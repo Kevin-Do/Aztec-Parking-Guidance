@@ -1,48 +1,56 @@
-import numpy as np
 import cv2
+import numpy as np
 
-cap = cv2.VideoCapture('parking 2.mp4')
+cap = cv2.VideoCapture('parkinglot1.mp4',0)
+reduce = cv2.createBackgroundSubtractorMOG2()
+#first webcam= 0, video files specified
+# Setup SimpleBlobDetector parameters.
+params = cv2.SimpleBlobDetector_Params()
 
-# take first frame of the video
-ret,frame = cap.read()
+# Change thresholds
+params.minThreshold = 10;
+params.maxThreshold = 200;
 
-# setup initial location of window
-r,h,c,w = 250,90,400,125  # simply hardcoded the values
-track_window = (c,r,w,h)
+# Filter by Area.
+params.filterByArea = True
+params.minArea = 900
 
-# set up the ROI for tracking
-roi = frame[r:r+h, c:c+w]
-hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
-roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
-cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
+# Filter by Circularity
+params.filterByCircularity = True
+params.minCircularity = 0.1
 
-# Setup the termination criteria, either 10 iteration or move by atleast 1 pt
-term_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
+# Filter by Convexity
+params.filterByConvexity = True
+params.minConvexity = 0.87
 
-while(1):
-    ret ,frame = cap.read()
+# Filter by Inertia
+params.filterByInertia = True
+params.minInertiaRatio = 0.01
 
-    if ret == True:
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)
+# Create a detector with the parameters
+ver = (cv2.__version__).split('.')
+if int(ver[0]) < 3 :
+    detector = cv2.SimpleBlobDetector(params)
+else :
+    detector = cv2.SimpleBlobDetector_create(params)
 
-        # apply meanshift to get the new location
-        ret, track_window = cv2.CamShift(dst, track_window, term_crit)
+detector = cv2.SimpleBlobDetector_create(params)
 
-        # Draw it on image
-        pts = cv2.boxPoints(ret)
-        pts = np.int0(pts)
-        img2 = cv2.polylines(frame,[pts],True, 255,2)
-        cv2.imshow('img2',img2)
 
-        if cv2.waitKey(35) & 0xFF == ord('q'):
-            break
-        else:
-            cv2.imwrite(chr(k)+".jpg",img2)
+while(True):
+    ret, frame = cap.read()
+    backgroundReduce = reduce.apply(frame)
+    keypoints = detector.detect(backgroundReduce)
 
-    else:
+    fg_with_keypoints = cv2.drawKeypoints(backgroundReduce, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    font = cv2.FONT_HERSHEY_PLAIN
+    cv2.putText(fg_with_keypoints, 'Aztec Parking Guidance System', (400, 700), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
+
+    cv2.imshow('nameFrame',fg_with_keypoints)
+
+    if cv2.waitKey(20) & 0xFF == ord('q'):
         break
-
-cv2.destroyAllWindows()
 cap.release()
+cv2.destroyAllWindows
+
