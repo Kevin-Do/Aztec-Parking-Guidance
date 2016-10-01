@@ -5,3 +5,6 @@ TODO: React Native app that communicates % capacity to all users
 *Funded by IEEE Region 6
 
 ![campus mapped](http://i.imgur.com/OXw4ISt.jpg)
+
+
+Going to be using Haar Cascades and train Haar Classfiers
