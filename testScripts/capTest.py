@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture('parking 2.mp4',)
+cap = cv2.VideoCapture('parkinglot1.mp4',)
 #first webcam= 0, video files specified
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
