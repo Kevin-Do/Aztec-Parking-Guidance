@@ -1,23 +1,31 @@
+# import the necessary packages
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import time
 import cv2
-import numpy as np
-
-cap = cv2.VideoCapture('parkinglot1.mp4',)
-#first webcam= 0, video files specified
-fgbg = cv2.createBackgroundSubtractorMOG2()
-
-while(True):
-       ret, frame = cap.read()
-       fgmask = fgbg.apply(frame)
-
-       grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-       font = cv2.FONT_HERSHEY_PLAIN
-       cv2.putText(fgmask, 'Aztec Parking Guidance System', (400, 700), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
-
-       cv2.imshow('nameFrame',fgmask)
-    #  cv2.imshow('grey', grey)
-
-       if cv2.waitKey(35) & 0xFF == ord('q'):
-           break
-cap.release()
-cv2.destroyAllWindows
-
+ 
+# initialize the camera and grab a reference to the raw camera capture
+camera = PiCamera()
+camera.resolution = (640, 480)
+camera.framerate = 60
+rawCapture = PiRGBArray(camera, size=(640, 480))
+ 
+# allow the camera to warmup
+time.sleep(0.1)
+ 
+# capture frames from the camera
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+	# grab the raw NumPy array representing the image, then initialize the timestamp
+	# and occupied/unoccupied text
+	image = frame.array
+ 
+	# show the frame
+	cv2.imshow("Frame", image)
+	key = cv2.waitKey(1) & 0xFF
+ 
+	# clear the stream in preparation for the next frame
+	rawCapture.truncate(0)
+ 
+	# if the `q` key was pressed, break from the loop
+	if key == ord("q"):
+		break
